@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eleitos RS · Financiamento 2026</title>
+<meta name="description" content="Receita, despesa, gastos com Facebook e com contratação de pessoas e custo por voto dos 86 deputados eleitos pelo Rio Grande do Sul em 2026, a partir da prestação de contas no TSE.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><div class="eyebrow">Deputados eleitos · Rio Grande do Sul · Eleições 2026</div>
+  <h1>Financiamento e gastos das campanhas dos eleitos</h1></div>
+  <p class="src">Prestação de contas parcial no DivulgaCandContas (TSE), consultada em 07/10/2026. Cada deputado tem a própria data de atualização, de 10/09 a 06/10. Votos do 1º turno com 100% das seções totalizadas. Valores em reais.</p>
+</header>
+
+<div class="filters" role="group" aria-label="Filtros">
+  <div class="seg" id="f-cargo">
+    <button type="button" data-v="" aria-pressed="true">Todos</button>
+    <button type="button" data-v="F" aria-pressed="false">Federal</button>
+    <button type="button" data-v="E" aria-pressed="false">Estadual</button>
+  </div>
+  <select id="f-part" aria-label="Partido"></select>
+  <select id="f-gen" aria-label="Gênero"><option value="">Todos os gêneros</option><option>Feminino</option><option>Masculino</option></select>
+  <select id="f-raca" aria-label="Cor/Raça"></select>
+  <input type="search" id="f-q" placeholder="Buscar deputado, partido ou número" aria-label="Buscar deputado">
+  <span class="count" id="count"></span>
+</div>
+
+<section class="kpis" id="kpis" aria-label="Indicadores"></section>
+
+<section class="panel rankp" id="ranking">
+  <div class="tabs" role="tablist" aria-label="Base do ranking" id="rk-tabs">
+    <button type="button" role="tab" data-v="inv" aria-selected="true">Investimento</button>
+    <button type="button" role="tab" data-v="desp" aria-selected="false">Despesa</button>
+  </div>
+  <div class="chips" id="rk-met" role="group" aria-label="Qual despesa" hidden>
+    <button type="button" data-v="dt" aria-pressed="true">Despesa total</button>
+    <button type="button" data-v="fb" aria-pressed="false">Facebook</button>
+    <button type="button" data-v="cp" aria-pressed="false">Contratação de pessoas</button>
+  </div>
+  <div class="vhead"><div><div class="eyebrow" id="rk-eyebrow">Eficiência do investimento</div><h2 style="font-size:22px" id="rk-title">Ranking de R$ investido por voto</h2>
+  <p class="sub" id="rk-sub"></p></div>
+  <div class="rk-ctrls"><span class="lbl">Ordenar por</span>
+    <div class="seg" id="rk-by"><button type="button" data-v="cpv" aria-pressed="true">R$ por voto</button><button type="button" data-v="val" aria-pressed="false">Valor investido</button><button type="button" data-v="pct" aria-pressed="false" hidden>% da despesa</button></div>
+    <div class="seg" id="effsort"><button type="button" data-v="1" aria-pressed="true">Menor primeiro</button><button type="button" data-v="-1" aria-pressed="false">Maior primeiro</button></div></div></div>
+  <div class="podium" id="podium"></div>
+  <div class="rk-head" aria-hidden="true"><span>#</span><span>Deputado(a)</span><span class="r" id="h-v">Votos</span><span class="r" id="h-val">Investido</span><span class="r" id="h-pct" hidden>% da despesa</span><span class="r" id="h-cpv">R$ por voto</span></div>
+  <div class="rk-list" id="eff"></div>
+  <p class="note" id="rk-note"></p>
+</section>
+
+<div class="two">
+  <section class="panel">
+    <div><h2>De onde veio o dinheiro</h2><p class="sub">Composição da receita líquida dos deputados filtrados</p></div>
+    <div class="stack" id="stack"></div>
+    <div class="comp-list" id="comp"></div>
+    <p class="note">"Outras fontes" reúne recursos próprios, financiamento coletivo, doações pela internet, aplicações financeiras e diretórios municipais.</p>
+  </section>
+  <section class="panel">
+    <div><h2>Candidaturas × recursos do partido</h2><p class="sub">Participação de cada grupo no número de candidaturas eleitas e na doação dos partidos</p></div>
+    <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>% das candidaturas</span><span><i class="sw" style="background:var(--s2)"></i>% da doação do partido</span></div>
+    <div class="eq" id="eq"></div>
+    <div class="avg" id="avg"></div>
+  </section>
+</div>
+
+<section class="panel" id="votos">
+  <div class="tabs" role="tablist" aria-label="Eixo horizontal da dispersão" id="sc-tabs">
+    <button type="button" role="tab" data-v="inv" aria-selected="true">Investimento</button>
+    <button type="button" role="tab" data-v="desp" aria-selected="false">Despesa</button>
+  </div>
+  <div><h2 id="sc-title">Votos × total líquido investido</h2><p class="sub" id="sc-sub"></p></div>
+  <div class="vkpis" id="vkpis"></div>
+  <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+    <div class="legend"><span><i class="sw dot" style="background:var(--s1)"></i>Deputado(a) federal</span><span><i class="sw dot" style="background:var(--s2)"></i>Deputado(a) estadual</span><span id="lg-stale" hidden><i class="sw hollow"></i>Vazado: contas atualizadas em setembro</span><span><svg width="22" height="10" aria-hidden="true"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 4"/></svg>Custo médio por voto (acima da linha = custo por voto menor que a média)</span><span>Escalas logarítmicas</span></div>
+    <div id="sc-wrap"><svg id="scatter" role="img" aria-label="Dispersão de votos pelo valor investido ou gasto por deputado"></svg></div>
+  </div>
+</section>
+
+<section class="panel" id="porcand">
+  <div class="tabs" role="tablist" aria-label="Recursos ou despesas por deputado" id="pc-tabs">
+    <button type="button" role="tab" data-v="inv" aria-selected="true">Investimento</button>
+    <button type="button" role="tab" data-v="desp" aria-selected="false">Despesa</button>
+  </div>
+  <div><h2 id="pc-title">Recursos por candidato</h2><p class="sub" id="pc-sub"></p></div>
+  <div class="legend" id="leg2"></div>
+  <div class="cands" id="cands"></div>
+</section>
+
+<section class="panel">
+  <div><h2>Base completa</h2><p class="sub">Clique no cabeçalho para ordenar</p></div>
+  <div class="tbl-wrap"><table id="tbl"><thead><tr></tr></thead><tbody></tbody></table></div>
+</section>
+</div>
+<div id="tip" hidden></div>
+<script src="assets/js/dados.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
